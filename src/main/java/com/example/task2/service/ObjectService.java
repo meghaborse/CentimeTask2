@@ -42,14 +42,23 @@ public class ObjectService {
 
         for (ObjectEntity parent : parentObjectEntities) {  //iterate through parent one by one
             int paremntid = parent.getId();
+            List<Map<String, Object>> temp = new ArrayList<>();
             if (childeObjectEntities.containsKey(paremntid)) {  //  is parentId belong to any child?
                 List<ObjectEntity> childEntities = childeObjectEntities.get(paremntid); // get the childes of given arent
                 List<String> childEntitiesName= childEntities.stream()
                         .map (s->s.getName()).collect(Collectors.toList());// get names of child
-                Map<String, Object> innerMap = new HashMap<>();
-                innerMap.put("Name", parent.getName());   //update parent name
-                innerMap.put("Sub Class", childEntitiesName);  // update childs
-                outputList.add(innerMap);
+                for(String subClassName:  childEntitiesName) {
+                    Map<String, Object> subClassNameMap = new HashMap<>();
+                    subClassNameMap.put("Name", subClassName);
+                    temp.add(subClassNameMap);
+                }
+
+
+                    Map<String, Object> innerMap = new HashMap<>();
+                    innerMap.put("Name", parent.getName());   //update parent name
+                    innerMap.put("Sub Class", temp);  // update childs
+                    outputList.add(innerMap);
+
             }
 
         }
