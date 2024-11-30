@@ -17,38 +17,41 @@ public class ObjectService {
         this.repository = repository;
     }
     public List<Map<String, Object>> getNestedObjects() {
-        List<ObjectEntity> inputeData = repository.findAll();
-        Map<Integer, List<String>> childrenMap = new HashMap<>();
-        List<ObjectEntity> result = new ArrayList<>();
-        for (ObjectEntity obj : inputeData) {
+        List<ObjectEntity> objectEntities = repository.findAll();
+        
+        Map<Integer, List<ObjectEntity>> childeObjectEntities = new HashMap<>();
+        List<ObjectEntity> parentObjectEntities = new ArrayList<>();
+        
+        //get childeObjectEntities & parentObjectEntities
+        for (ObjectEntity obj : objectEntities) {
             int parentId = obj.getParentId();
             if (parentId != 0) {
-                List<String> children = childrenMap.get(parentId);
+                List<ObjectEntity> children = childeObjectEntities.get(parentId);
                 if (children == null) {
                     children = new ArrayList<>();
-                    childrenMap.put(parentId, children);
+                    childeObjectEntities.put(parentId, children);
                 }
-                children.add(obj.getName());
+
+                children.add(obj);
 
             } else {
-                result.add(obj);
+                parentObjectEntities.add(obj);
             }
         }
+        List<Map<String, Object>> outputList = new ArrayList<>();
 
-        List<Map<String, Object>> list1 = new ArrayList<>();
-        List<Map<String, Object>> listIn = new ArrayList<>();
-        Map<String, Object> mapIn = new HashMap<>();
-        for (ObjectEntity parent : result) {
+        for (ObjectEntity parent : parentObjectEntities) {
             int paremntid = parent.getId();
-            if (childrenMap.containsKey(paremntid)) {
-                List<String> children = childrenMap.get(paremntid);
-                mapIn.put("SubClass", children);
-                mapIn.put("Name", parent.getName());
-                list1.add(mapIn);
+            if (childeObjectEntities.containsKey(paremntid)) {
+                List<ObjectEntity> childEntities = childeObjectEntities.get(paremntid);
+                Map<String, Object> innerMap = new HashMap<>();
+                innerMap.put("Sub Class", childEntities);  //
+                innerMap.put("Name", parent.getName());
+                outputList.add(innerMap);
             }
 
         }
-        return list1;
+        return outputList;
 
     }
 }
