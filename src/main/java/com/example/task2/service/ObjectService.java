@@ -1,5 +1,6 @@
 package com.example.task2.service;
 
+import com.example.task2.annotation.LogMethodParam;
 import com.example.task2.model.ObjectEntity;
 import com.example.task2.repository.ObjectRepository;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ public class ObjectService {
     public ObjectService(ObjectRepository repository) {
         this.repository = repository;
     }
+    @LogMethodParam
     public Optional<ObjectEntity> getObjectById(int id){
         return repository.findById(id);
     }

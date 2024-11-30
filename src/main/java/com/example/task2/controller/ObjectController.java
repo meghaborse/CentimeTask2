@@ -1,5 +1,7 @@
 package com.example.task2.controller;
 
+import com.example.task2.annotation.LogMethodParam;
+import com.example.task2.aop.CustomLogging;
 import com.example.task2.model.ObjectEntity;
 import com.example.task2.service.ObjectService;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +22,13 @@ public class ObjectController {
     public ObjectController(ObjectService objectService) {
         this.objectService = objectService;
     }
+    @LogMethodParam
     @GetMapping("/{id}")
     public ResponseEntity<ObjectEntity> getObjectById(@PathVariable int id){
         Optional<ObjectEntity> object = objectService.getObjectById(id);
         return object.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
+    @LogMethodParam
     @GetMapping("/nested")
     public ResponseEntity<List<Map<String, Object>>> getNestedObjects() {
         return ResponseEntity.ok(objectService.getNestedObjects());
