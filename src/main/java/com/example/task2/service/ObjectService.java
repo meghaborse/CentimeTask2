@@ -26,38 +26,46 @@ public class ObjectService {
         
         //get childeObjectEntities & parentObjectEntities separately
         for (ObjectEntity obj : objectEntities) {
-            int parentId = obj.getParentId();
-            if (parentId != 0) {
+            int parentId = obj.getParentId();  //get parent id
+            if (parentId != 0) { //if ObjectEntity have parent entity other than 0 then its child entity
                 List<ObjectEntity> children = childeObjectEntities.get(parentId);
                 if (children == null) {
                     children = new ArrayList<>();
+                    //update childEntityList if parent != 0
                     childeObjectEntities.put(parentId, children);
                 }
                 children.add(obj);
 
             } else {
-                parentObjectEntities.add(obj);
+                //if parent id is 0 then its parent entity
+                parentObjectEntities.add(obj);  //update parententityList if parent id =0
             }
         }
 
         for (ObjectEntity parent : parentObjectEntities) {  //iterate through parent one by one
             int paremntid = parent.getId();
-            List<Map<String, Object>> temp = new ArrayList<>();
+            List<Map<String, Object>> subClassList = new ArrayList<>();
             if (childeObjectEntities.containsKey(paremntid)) {  //  is parentId belong to any child?
-                List<ObjectEntity> childEntities = childeObjectEntities.get(paremntid); // get the childes of given arent
+
+                // get the childes of given parent
+                List<ObjectEntity> childEntities = childeObjectEntities.get(paremntid);
+
+                // get names of child in list
                 List<String> childEntitiesName= childEntities.stream()
-                        .map (s->s.getName()).collect(Collectors.toList());// get names of child
+                        .map (s->s.getName()).collect(Collectors.toList());
+
+               //subclass-> names will in map
                 for(String subClassName:  childEntitiesName) {
                     Map<String, Object> subClassNameMap = new HashMap<>();
                     subClassNameMap.put("Name", subClassName);
-                    temp.add(subClassNameMap);
+                    subClassList.add(subClassNameMap);
                 }
 
 
-                    Map<String, Object> innerMap = new HashMap<>();
-                    innerMap.put("Name", parent.getName());   //update parent name
-                    innerMap.put("Sub Class", temp);  // update childs
-                    outputList.add(innerMap);
+                    Map<String, Object> outperMap = new HashMap<>();
+                    outperMap.put("Name", parent.getName());   //update parent name
+                    outperMap.put("Sub Class", subClassList);  // update childs
+                    outputList.add(outperMap);
 
             }
 
