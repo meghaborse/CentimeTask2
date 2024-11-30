@@ -1,6 +1,6 @@
 package com.example.task2.service;
 
-import com.example.task2.annotation.LogMethodParam;
+import com.example.task2.aop.LogMethodParam;
 import com.example.task2.model.ObjectEntity;
 import com.example.task2.repository.ObjectRepository;
 import org.springframework.stereotype.Service;

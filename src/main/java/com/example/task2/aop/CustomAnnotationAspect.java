@@ -11,11 +11,10 @@ import java.util.Arrays;
 
 @Aspect
 @Component
-public class CustomLogging {
-    private static final Logger logger = LoggerFactory.getLogger(CustomLogging.class);
-
+public class CustomAnnotationAspect {
+    private static final Logger logger = LoggerFactory.getLogger(CustomAnnotationAspect.class);
     @Around("@annotation(LogMethodParam)")
-    public Object printMethodParameters(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object logMethodParameters(ProceedingJoinPoint joinPoint) throws Throwable {
         logger.info("Method called: " + joinPoint.getSignature().getName());
         logger.info("Parameters: " + Arrays.toString(joinPoint.getArgs()));
         return joinPoint.proceed();
